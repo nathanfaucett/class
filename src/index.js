@@ -96,6 +96,7 @@ ClassPrototype.generateNewId = function() {
 ClassPrototype.toJSON = function(json) {
     json = json || {};
 
+    json.__id = this.__id;
     json.className = this.className;
 
     return json;

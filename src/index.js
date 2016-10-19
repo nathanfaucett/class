@@ -1,13 +1,15 @@
-var has = require("has"),
-    isNull = require("is_null"),
-    isFunction = require("is_function"),
-    inherits = require("inherits"),
-    EventEmitter = require("event_emitter"),
-    createPool = require("create_pool"),
-    uuid = require("uuid");
+var has = require("@nathanfaucett/has"),
+    isNull = require("@nathanfaucett/is_null"),
+    isFunction = require("@nathanfaucett/is_function"),
+    apply = require("@nathanfaucett/apply"),
+    inherits = require("@nathanfaucett/inherits"),
+    EventEmitter = require("@nathanfaucett/event_emitter"),
+    createPool = require("@nathanfaucett/create_pool"),
+    uuid = require("@nathanfaucett/uuid");
 
 
-var ClassPrototype;
+var GLOBAL_CLASSES = global.__GLOBAL_CLASSES__ || (global.__GLOBAL_CLASSES__ = {}),
+    ClassPrototype;
 
 
 module.exports = Class;
@@ -17,7 +19,7 @@ function Class() {
 
     EventEmitter.call(this, -1);
 
-    this.__id = null;
+    this._id = null;
 }
 EventEmitter.extend(Class);
 createPool(Class);
@@ -34,7 +36,7 @@ Class.extend = function(Child, className) {
         Child.className = Child.prototype.className = className;
 
         if (isFunction(this.onExtend)) {
-            this.onExtend.apply(this, arguments);
+            apply(this.onExtend, arguments, this);
         }
 
         return Child;
@@ -43,7 +45,7 @@ Class.extend = function(Child, className) {
 
 Class.inherit = Class.extend;
 
-Class.__classes = {};
+Class.__classes = GLOBAL_CLASSES;
 
 Class.hasClass = function(className) {
     return has(Class.__classes, className);
@@ -69,26 +71,26 @@ Class.className = ClassPrototype.className = "Class";
 
 Class.create = function() {
     var instance = new this();
-    return instance.construct.apply(instance, arguments);
+    return apply(instance.construct, arguments, instance);
 };
 
 ClassPrototype.construct = function() {
 
-    this.__id = uuid();
+    this._id = uuid();
 
     return this;
 };
 
 ClassPrototype.destructor = function() {
 
-    this.__id = null;
+    this._id = null;
 
     return this;
 };
 
 ClassPrototype.generateNewId = function() {
 
-    this.__id = uuid();
+    this._id = uuid();
 
     return this;
 };
@@ -96,7 +98,7 @@ ClassPrototype.generateNewId = function() {
 ClassPrototype.toJSON = function(json) {
     json = json || {};
 
-    json.__id = this.__id;
+    json._id = this._id;
     json.className = this.className;
 
     return json;
@@ -104,7 +106,7 @@ ClassPrototype.toJSON = function(json) {
 
 ClassPrototype.fromJSON = function( /* json */ ) {
 
-    if (isNull(this.__id)) {
+    if (isNull(this._id)) {
         this.generateNewId();
     }
 

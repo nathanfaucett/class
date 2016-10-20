@@ -95,6 +95,10 @@ ClassPrototype.generateNewId = function() {
     return this;
 };
 
+ClassPrototype.getId = function() {
+    return this._id;
+};
+
 ClassPrototype.toJSON = function(json) {
     json = json || {};
 

@@ -90,7 +90,7 @@ ClassPrototype.destructor = function() {
 
 ClassPrototype.generateNewId = function() {
 
-    this._id = uuid();
+    this._id = uuid.v4();
 
     return this;
 };

@@ -76,7 +76,7 @@ Class.create = function() {
 
 ClassPrototype.construct = function() {
 
-    this._id = uuid();
+    this._id = uuid.v4();
 
     return this;
 };

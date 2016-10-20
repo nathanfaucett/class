@@ -1,14 +1,20 @@
-scene_graph [![Build Status](https://travis-ci.org/nathanfaucett/js-scene_graph.svg?branch=master)](https://travis-ci.org/nathanfaucett/js-scene_graph)
+class [![Build Status](https://travis-ci.org/nathanfaucett/js-class.svg?branch=master)](https://travis-ci.org/nathanfaucett/js-class)
 ======
 
 
 ```javascript
-var scene_graph = require("@nathanfaucett/scene_graph");
+var Class = require("@nathanfaucett/class");
 
 
-var canvas = document.getElementById("canvas"),
-    ctx = canvas.getContext("2d");
+function ChildClass() {
 
+    Class.call(this);
 
+    this.value = null;
+}
+Class.extend(ChildClass, "namespace.ChildClass");
 
+ChildClass.prototype.getValue = function() {
+    return this.value;
+};
 ```
